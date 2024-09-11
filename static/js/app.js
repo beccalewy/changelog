@@ -159,6 +159,40 @@ function setupFileInputs() {
     });
 }
 
+async function updateSubtitle() {
+    const subtitleInput = document.getElementById('subtitle');
+    const newSubtitle = subtitleInput.value.trim();
+
+    const response = await fetch('/api/subtitle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subtitle: newSubtitle }),
+    });
+
+    if (response.ok) {
+        alert('Subtitle updated successfully!');
+    } else {
+        alert('Failed to update subtitle. Please try again.');
+    }
+}
+
+async function loadSubtitle() {
+    const response = await fetch('/api/subtitle');
+    if (response.ok) {
+        const data = await response.json();
+        const subtitleElement = document.getElementById('subtitle');
+        if (subtitleElement) {
+            subtitleElement.textContent = data.subtitle;
+        }
+        const subtitleInput = document.getElementById('subtitle');
+        if (subtitleInput) {
+            subtitleInput.value = data.subtitle;
+        }
+    }
+}
+
 let currentEditPostId = null;
 let currentEditPostType = null;
 
@@ -166,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPosts('work');
     loadPosts('personal');
     setupMobileToggle();
+    loadSubtitle();
     if (isAdminPage) {
         setupFileInputs();
     }

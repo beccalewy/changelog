@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, url_for
-from database import init_db, add_post, get_posts, delete_post, edit_post
+from database import init_db, add_post, get_posts, delete_post, edit_post, get_subtitle, update_subtitle
 import os
 from werkzeug.utils import secure_filename
 
@@ -21,7 +21,8 @@ def admin():
 def public_view():
     work_posts = get_posts('work')
     personal_posts = get_posts('personal')
-    return render_template('public.html', work_posts=work_posts, personal_posts=personal_posts)
+    subtitle = get_subtitle()
+    return render_template('public.html', work_posts=work_posts, personal_posts=personal_posts, subtitle=subtitle)
 
 @app.route('/api/posts', methods=['GET'])
 def get_all_posts():
@@ -64,6 +65,20 @@ def edit_post_route(post_id):
     if edit_post(post_id, content):
         return jsonify({'success': True}), 200
     return jsonify({'error': 'Post not found'}), 404
+
+@app.route('/api/subtitle', methods=['GET'])
+def get_subtitle_route():
+    subtitle = get_subtitle()
+    return jsonify({'subtitle': subtitle})
+
+@app.route('/api/subtitle', methods=['POST'])
+def update_subtitle_route():
+    subtitle = request.json.get('subtitle')
+    if subtitle is None:
+        return jsonify({'error': 'Missing subtitle'}), 400
+    
+    update_subtitle(subtitle)
+    return jsonify({'success': True}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

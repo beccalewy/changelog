@@ -24,6 +24,12 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS subtitle (
+            id SERIAL PRIMARY KEY,
+            content TEXT NOT NULL
+        )
+    ''')
     conn.commit()
     cur.close()
     conn.close()
@@ -73,3 +79,21 @@ def edit_post(post_id, content):
     cur.close()
     conn.close()
     return updated_rows > 0
+
+def get_subtitle():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT content FROM subtitle LIMIT 1")
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return result[0] if result else ""
+
+def update_subtitle(content):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM subtitle")
+    cur.execute("INSERT INTO subtitle (content) VALUES (%s)", (content,))
+    conn.commit()
+    cur.close()
+    conn.close()
