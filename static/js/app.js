@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPosts('work');
     loadPosts('personal');
     setupMobileToggle();
+    setupFileInputs();
 });
 
 function setupMobileToggle() {
@@ -15,6 +16,21 @@ function setupMobileToggle() {
     if (window.innerWidth <= 768) {
         document.getElementById('work-feed').classList.add('active');
     }
+}
+
+function setupFileInputs() {
+    ['work', 'personal'].forEach(type => {
+        const fileInput = document.getElementById(`${type}-image`);
+        const fileNameSpan = document.getElementById(`${type}-file-name`);
+        
+        fileInput.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+                fileNameSpan.textContent = event.target.files[0].name;
+            } else {
+                fileNameSpan.textContent = '';
+            }
+        });
+    });
 }
 
 function toggleFeed() {
@@ -66,6 +82,7 @@ async function submitPost(type) {
     if (response.ok) {
         input.value = '';
         imageInput.value = '';
+        document.getElementById(`${type}-file-name`).textContent = '';
         loadPosts(type);
     } else {
         alert('Failed to submit post. Please try again.');

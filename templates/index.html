@@ -43,7 +43,16 @@
                 <h2 class="text-xl font-semibold mb-4 text-blue-300">Work Feed</h2>
                 <div class="mb-4">
                     <textarea id="work-input" class="w-full p-2 border rounded" rows="3" placeholder="What's happening at work?"></textarea>
-                    <input type="file" id="work-image" accept="image/*" class="mt-2">
+                    <div class="mt-2 relative">
+                        <input type="file" id="work-image" accept="image/*" class="hidden">
+                        <label for="work-image" class="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 inline-flex items-center text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                            </svg>
+                            Upload Image
+                        </label>
+                        <span id="work-file-name" class="ml-2 text-sm text-gray-400"></span>
+                    </div>
                     <button onclick="submitPost('work')" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post</button>
                 </div>
                 <div id="work-posts" class="space-y-4"></div>
@@ -52,7 +61,16 @@
                 <h2 class="text-xl font-semibold mb-4 text-green-300">Personal Feed</h2>
                 <div class="mb-4">
                     <textarea id="personal-input" class="w-full p-2 border rounded" rows="3" placeholder="What's happening in your personal life?"></textarea>
-                    <input type="file" id="personal-image" accept="image/*" class="mt-2">
+                    <div class="mt-2 relative">
+                        <input type="file" id="personal-image" accept="image/*" class="hidden">
+                        <label for="personal-image" class="cursor-pointer bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 inline-flex items-center text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                            </svg>
+                            Upload Image
+                        </label>
+                        <span id="personal-file-name" class="ml-2 text-sm text-gray-400"></span>
+                    </div>
                     <button onclick="submitPost('personal')" class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Post</button>
                 </div>
                 <div id="personal-posts" class="space-y-4"></div>
