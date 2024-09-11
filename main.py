@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, url_for
-from database import init_db, add_post, get_posts
+from database import init_db, add_post, get_posts, delete_post, edit_post
 import os
 from werkzeug.utils import secure_filename
 
@@ -42,6 +42,22 @@ def create_post():
     
     add_post(post_type, content, image_url)
     return jsonify({'success': True}), 201
+
+@app.route('/api/posts/<int:post_id>', methods=['DELETE'])
+def delete_post_route(post_id):
+    if delete_post(post_id):
+        return jsonify({'success': True}), 200
+    return jsonify({'error': 'Post not found'}), 404
+
+@app.route('/api/posts/<int:post_id>', methods=['PUT'])
+def edit_post_route(post_id):
+    content = request.json.get('content')
+    if not content:
+        return jsonify({'error': 'Missing content'}), 400
+    
+    if edit_post(post_id, content):
+        return jsonify({'success': True}), 200
+    return jsonify({'error': 'Post not found'}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

@@ -53,3 +53,23 @@ def get_posts(post_type):
     cur.close()
     conn.close()
     return posts
+
+def delete_post(post_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM posts WHERE id = %s", (post_id,))
+    deleted_rows = cur.rowcount
+    conn.commit()
+    cur.close()
+    conn.close()
+    return deleted_rows > 0
+
+def edit_post(post_id, content):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE posts SET content = %s WHERE id = %s", (content, post_id))
+    updated_rows = cur.rowcount
+    conn.commit()
+    cur.close()
+    conn.close()
+    return updated_rows > 0
