@@ -5,11 +5,11 @@
 
     #work-feed.active, #personal-feed.active {
         display: block;
+        width: 100%;
     }
 
     .toggle-feed {
         display: block;
-        margin-bottom: 1rem;
     }
 }
 

@@ -112,32 +112,42 @@ async function loadPosts(type) {
     });
 }
 
-if (isAdminPage) {
-    document.addEventListener('DOMContentLoaded', () => {
-        loadPosts('work');
-        loadPosts('personal');
-        setupMobileToggle();
-        setupFileInputs();
-    });
+function setupMobileToggle() {
+    const toggleButton = document.getElementById('toggle-feed');
+    const workFeed = document.getElementById('work-feed');
+    const personalFeed = document.getElementById('personal-feed');
 
-    function setupMobileToggle() {
-        const container = document.querySelector('.container');
-        const toggleButton = document.createElement('button');
-        toggleButton.textContent = 'Toggle Feed';
-        toggleButton.className = 'toggle-feed bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mb-4';
-        toggleButton.addEventListener('click', toggleFeed);
-        container.insertBefore(toggleButton, container.firstChild);
-
-        if (window.innerWidth <= 768) {
-            document.getElementById('work-feed').classList.add('active');
+    if (toggleButton && workFeed && personalFeed) {
+        function updateFeedVisibility() {
+            if (window.innerWidth <= 768) {
+                if (!workFeed.classList.contains('active') && !personalFeed.classList.contains('active')) {
+                    workFeed.classList.add('active');
+                }
+                toggleButton.style.display = 'block';
+            } else {
+                workFeed.classList.remove('active');
+                personalFeed.classList.remove('active');
+                toggleButton.style.display = 'none';
+            }
         }
-    }
 
-    function setupFileInputs() {
-        ['work', 'personal'].forEach(type => {
-            const fileInput = document.getElementById(`${type}-image`);
-            const fileNameSpan = document.getElementById(`${type}-file-name`);
-            
+        updateFeedVisibility();
+
+        toggleButton.addEventListener('click', () => {
+            workFeed.classList.toggle('active');
+            personalFeed.classList.toggle('active');
+        });
+
+        window.addEventListener('resize', updateFeedVisibility);
+    }
+}
+
+function setupFileInputs() {
+    ['work', 'personal'].forEach(type => {
+        const fileInput = document.getElementById(`${type}-image`);
+        const fileNameSpan = document.getElementById(`${type}-file-name`);
+        
+        if (fileInput && fileNameSpan) {
             fileInput.addEventListener('change', (event) => {
                 if (event.target.files.length > 0) {
                     fileNameSpan.textContent = event.target.files[0].name;
@@ -145,23 +155,18 @@ if (isAdminPage) {
                     fileNameSpan.textContent = '';
                 }
             });
-        });
-    }
-
-    function toggleFeed() {
-        const workFeed = document.getElementById('work-feed');
-        const personalFeed = document.getElementById('personal-feed');
-        
-        workFeed.classList.toggle('active');
-        personalFeed.classList.toggle('active');
-    }
+        }
+    });
 }
 
 let currentEditPostId = null;
 let currentEditPostType = null;
 
-// Load posts for both admin and public pages
 document.addEventListener('DOMContentLoaded', () => {
     loadPosts('work');
     loadPosts('personal');
+    setupMobileToggle();
+    if (isAdminPage) {
+        setupFileInputs();
+    }
 });
