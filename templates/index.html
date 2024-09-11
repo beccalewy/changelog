@@ -15,6 +15,7 @@
                 <h2 class="text-xl font-semibold mb-4">Work Feed</h2>
                 <div class="mb-4">
                     <textarea id="work-input" class="w-full p-2 border rounded" rows="3" placeholder="What's happening at work?"></textarea>
+                    <input type="file" id="work-image" accept="image/*" class="mt-2">
                     <button onclick="submitPost('work')" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post</button>
                 </div>
                 <div id="work-posts" class="space-y-4"></div>
@@ -23,6 +24,7 @@
                 <h2 class="text-xl font-semibold mb-4">Personal Feed</h2>
                 <div class="mb-4">
                     <textarea id="personal-input" class="w-full p-2 border rounded" rows="3" placeholder="What's happening in your personal life?"></textarea>
+                    <input type="file" id="personal-image" accept="image/*" class="mt-2">
                     <button onclick="submitPost('personal')" class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Post</button>
                 </div>
                 <div id="personal-posts" class="space-y-4"></div>

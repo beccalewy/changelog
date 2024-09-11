@@ -36,6 +36,7 @@ async function loadPosts(type) {
         postElement.className = 'bg-gray-100 p-4 rounded';
         postElement.innerHTML = `
             <p class="mb-2">${post.content}</p>
+            ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="w-full mb-2 rounded">` : ''}
             <small class="text-gray-500">${new Date(post.created_at).toLocaleString()}</small>
         `;
         postsContainer.appendChild(postElement);
@@ -44,20 +45,27 @@ async function loadPosts(type) {
 
 async function submitPost(type) {
     const input = document.getElementById(`${type}-input`);
+    const imageInput = document.getElementById(`${type}-image`);
     const content = input.value.trim();
     
     if (!content) return;
     
+    const formData = new FormData();
+    formData.append('type', type);
+    formData.append('content', content);
+    
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
+    
     const response = await fetch('/api/posts', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ type, content }),
+        body: formData,
     });
     
     if (response.ok) {
         input.value = '';
+        imageInput.value = '';
         loadPosts(type);
     } else {
         alert('Failed to submit post. Please try again.');

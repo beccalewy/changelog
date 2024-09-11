@@ -20,17 +20,27 @@ def init_db():
             id SERIAL PRIMARY KEY,
             type VARCHAR(10) NOT NULL,
             content TEXT NOT NULL,
+            image_url TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     conn.commit()
     cur.close()
     conn.close()
+    add_image_url_column()
 
-def add_post(post_type, content):
+def add_image_url_column():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("INSERT INTO posts (type, content) VALUES (%s, %s)", (post_type, content))
+    cur.execute("ALTER TABLE posts ADD COLUMN IF NOT EXISTS image_url TEXT")
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def add_post(post_type, content, image_url=None):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO posts (type, content, image_url) VALUES (%s, %s, %s)", (post_type, content, image_url))
     conn.commit()
     cur.close()
     conn.close()
