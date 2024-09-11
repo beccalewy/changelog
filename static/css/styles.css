@@ -1,0 +1,20 @@
+@media (max-width: 768px) {
+    #work-feed, #personal-feed {
+        display: none;
+    }
+
+    #work-feed.active, #personal-feed.active {
+        display: block;
+    }
+
+    .toggle-feed {
+        display: block;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .toggle-feed {
+        display: none;
+    }
+}
