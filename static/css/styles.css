@@ -49,3 +49,32 @@ label[for="personal-image"]:hover {
     font-size: 0.875rem;
     color: #a0aec0;
 }
+
+/* Edit modal styles */
+#edit-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#edit-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#edit-modal.flex {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#edit-content {
+    background-color: #4a5568;
+    color: #e2e8f0;
+    border-color: #718096;
+}
+
+#edit-modal button {
+    transition: background-color 0.2s;
+}
+
+#edit-modal button:hover {
+    opacity: 0.9;
+}

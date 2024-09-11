@@ -13,9 +13,15 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Initialize database
 init_db()
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 @app.route('/')
-def index():
-    return render_template('index.html')
+def public_view():
+    work_posts = get_posts('work')
+    personal_posts = get_posts('personal')
+    return render_template('public.html', work_posts=work_posts, personal_posts=personal_posts)
 
 @app.route('/api/posts', methods=['GET'])
 def get_all_posts():
