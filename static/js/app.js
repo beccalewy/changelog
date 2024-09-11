@@ -33,11 +33,11 @@ async function loadPosts(type) {
     
     posts.forEach(post => {
         const postElement = document.createElement('div');
-        postElement.className = 'bg-gray-100 p-4 rounded';
+        postElement.className = `p-4 rounded mb-4 ${type === 'work' ? 'bg-blue-100' : 'bg-green-100'}`;
         postElement.innerHTML = `
-            <p class="mb-2">${post.content}</p>
+            <p class="mb-2 ${type === 'work' ? 'text-blue-800 font-semibold' : 'text-green-800'}">${post.content}</p>
             ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="w-full mb-2 rounded">` : ''}
-            <small class="text-gray-500">${new Date(post.created_at).toLocaleString()}</small>
+            <small class="text-gray-600">${new Date(post.created_at).toLocaleString()}</small>
         `;
         postsContainer.appendChild(postElement);
     });
