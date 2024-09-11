@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, url_for
 from database import init_db, add_post, get_posts, delete_post, edit_post, get_subtitle, update_subtitle
 import os
 from werkzeug.utils import secure_filename
+import bleach
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -38,6 +39,9 @@ def create_post():
     if not post_type or not content:
         return jsonify({'error': 'Missing post type or content'}), 400
     
+    # Sanitize the content
+    content = bleach.clean(content, tags=['a'], attributes={'a': ['href', 'target', 'rel']})
+    
     image_url = None
     if 'image' in request.files:
         image = request.files['image']
@@ -61,6 +65,9 @@ def edit_post_route(post_id):
     content = request.json.get('content')
     if not content:
         return jsonify({'error': 'Missing content'}), 400
+    
+    # Sanitize the content
+    content = bleach.clean(content, tags=['a'], attributes={'a': ['href', 'target', 'rel']})
     
     if edit_post(post_id, content):
         return jsonify({'success': True}), 200

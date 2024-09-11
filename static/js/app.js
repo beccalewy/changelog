@@ -5,7 +5,10 @@ async function submitPost(type) {
     const imageInput = document.getElementById(`${type}-image`);
     const content = input.value.trim();
     
-    if (!content) return;
+    if (!content) {
+        alert('Post content cannot be empty.');
+        return;
+    }
     
     const formData = new FormData();
     formData.append('type', type);
@@ -17,7 +20,7 @@ async function submitPost(type) {
     
     const response = await fetch('/api/posts', {
         method: 'POST',
-        body: formData,
+        body: formData
     });
     
     if (response.ok) {
@@ -28,6 +31,38 @@ async function submitPost(type) {
     } else {
         alert('Failed to submit post. Please try again.');
     }
+}
+
+function convertUrlsToLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+}
+
+async function loadPosts(type) {
+    const response = await fetch(`/api/posts?type=${type}`);
+    const posts = await response.json();
+    const postsContainer = document.getElementById(`${type}-posts`);
+    postsContainer.innerHTML = '';
+    
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = `p-4 rounded mb-4 ${type === 'work' ? 'bg-blue-100' : 'bg-green-100'}`;
+        postElement.setAttribute('data-post-id', post.id);
+        postElement.innerHTML = `
+            <p class="mb-2 ${type === 'work' ? 'text-blue-800 font-semibold' : 'text-green-800'}">${convertUrlsToLinks(post.content)}</p>
+            ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="w-full mb-2 rounded">` : ''}
+            <small class="text-gray-600">${new Date(post.created_at).toLocaleString()}</small>
+            ${isAdminPage ? `
+            <div class="mt-2">
+                <button onclick="openEditModal(${post.id}, '${type}', '${post.content.replace(/'/g, "\\'")}')" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2">Edit</button>
+                <button onclick="deletePost(${post.id}, '${type}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</button>
+            </div>
+            ` : ''}
+        `;
+        postsContainer.appendChild(postElement);
+    });
 }
 
 async function deletePost(postId, type) {
@@ -43,6 +78,9 @@ async function deletePost(postId, type) {
         }
     }
 }
+
+let currentEditPostId = null;
+let currentEditPostType = null;
 
 function openEditModal(postId, type, content) {
     currentEditPostId = postId;
@@ -85,31 +123,6 @@ async function saveEdit() {
     } else {
         alert('Failed to edit post. Please try again.');
     }
-}
-
-async function loadPosts(type) {
-    const response = await fetch(`/api/posts?type=${type}`);
-    const posts = await response.json();
-    const postsContainer = document.getElementById(`${type}-posts`);
-    postsContainer.innerHTML = '';
-    
-    posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.className = `p-4 rounded mb-4 ${type === 'work' ? 'bg-blue-100' : 'bg-green-100'}`;
-        postElement.setAttribute('data-post-id', post.id);
-        postElement.innerHTML = `
-            <p class="mb-2 ${type === 'work' ? 'text-blue-800 font-semibold' : 'text-green-800'}">${post.content}</p>
-            ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="w-full mb-2 rounded">` : ''}
-            <small class="text-gray-600">${new Date(post.created_at).toLocaleString()}</small>
-            ${isAdminPage ? `
-            <div class="mt-2">
-                <button onclick="openEditModal(${post.id}, '${type}', '${post.content.replace(/'/g, "\\'")}')" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2">Edit</button>
-                <button onclick="deletePost(${post.id}, '${type}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</button>
-            </div>
-            ` : ''}
-        `;
-        postsContainer.appendChild(postElement);
-    });
 }
 
 function setupMobileToggle() {
@@ -192,9 +205,6 @@ async function loadSubtitle() {
         }
     }
 }
-
-let currentEditPostId = null;
-let currentEditPostType = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPosts('work');
